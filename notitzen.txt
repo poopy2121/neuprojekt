@@ -1,0 +1,34 @@
+✅ Step 1: Where does $user['username'] come from?
+You did:
+
+php
+
+$user = $result->fetch_assoc();
+That gives you an associative array like:
+
+[
+  'username' => 'coolboy123',
+  'password' => '$2y$10... (hashed)'
+]
+So yes — now $user['username'] is the logged-in username pulled from the database.
+
+
+
+🧠 What is $stmt?
+Think of $stmt as short for “statement” — more specifically:
+
+A prepared statement that gets sent to the database.
+
+🔧 So what does $stmt = $conn->prepare($query) do?
+It prepares a SQL query (with placeholders like ?) before it actually sends data to the database.
+
+Why?
+
+To prevent SQL injection.
+
+To allow safely binding real values later (bind_param).
+
+You’re basically telling MySQL:
+
+"Hey, I’m gonna run a query like SELECT * FROM users WHERE username = ? — I’ll tell you what ? should be in a sec.”
+
