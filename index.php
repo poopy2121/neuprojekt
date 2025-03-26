@@ -41,7 +41,6 @@
     $stmt = $conn->prepare($query);
     $stmt->bind_param('s', $username);
     $stmt->execute();
-    // get_result() gives you many rows (even if it’s just 1)
     $result = $stmt->get_result();
     if (mysqli_num_rows($result) == 1) {
         // fetch_assoc() lets you access that row as an array, also gibt mir die user daten als array (username, pw aus datenbank).
