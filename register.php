@@ -26,34 +26,25 @@ require_once 'db.php';
 
 //wenn form aaction = post, mach: 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
     $username = $_POST['username'];
     $password = $_POST['password'];
     $repeated_password = $_POST['repeated_password'];
-
     //passwort wird gehased, password default ist der name vom algorithmus, es gibt mehrere
     $hashedpassword = password_hash($password, PASSWORD_DEFAULT);
-
 }
 
 //isset: code innerhalb hier von wird nur ausgeführt sobald der button mit name "register" geklickt wird
 if (isset($_POST['register'])) {
-
 
     if (empty($username) || empty($password) || empty($repeated_password)) {
         echo "bitte fülle alles aus.";
         exit;
     }
 
-
-
     if ($password !== $repeated_password) {
         echo "passwords are not the same!!!";
         exit;
         }
-
-
-
 
 //checken ob user schon existiert, bzw username vergeben
 
@@ -67,8 +58,6 @@ if (mysqli_num_rows($resulttwo) == 1) {
     echo "username schon vergeben.";
     exit;
 }
-
-
 
 //FORMDATA IN DATENBANK BALLERN
 //conn, bind, execute

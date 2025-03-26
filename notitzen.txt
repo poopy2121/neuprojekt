@@ -32,3 +32,32 @@ You’re basically telling MySQL:
 
 "Hey, I’m gonna run a query like SELECT * FROM users WHERE username = ? — I’ll tell you what ? should be in a sec.”
 
+
+index login: 
+Yes! 🔥 Richtig gedacht und super erklärt!
+
+get_result() gibt dir die ganze Ergebnismenge – stell dir das vor wie eine Tabelle mit Zeilen und Spalten.
+fetch_assoc() holt sich davon eine einzelne Zeile (z. B. vom passenden User) und gibt sie dir als assoziatives Array zurück, z. B.:
+
+php
+Kopieren
+Bearbeiten
+[
+  "username" => "cooluser",
+  "password" => "$2y$10$...."
+]
+Das brauchst du, um dann z. B. auf $user['password'] zugreifen zu können – genau wie du’s gesagt hast.
+
+
+
+
+CREATE TABLE notes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    content TEXT NOT NULL,
+    created_by INT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (created_by) REFERENCES users(id)
+); Foreign key references setzt die relation. also createdby spalte ist gleich id vom user in user table.
+
+
+var dump zum debuggen

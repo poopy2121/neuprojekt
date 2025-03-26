@@ -21,23 +21,18 @@
 
 </body>
 </html>
-
-
 <?php
     session_start();
     require_once 'db.php';
-
     if (isset($_POST['login'])) {
         $username = $_POST['username'];
-    $password = $_POST['password'];
-
-
-    if (empty($password) || empty($username))  {
+        $password = $_POST['password'];
+        
+        if (empty($password) || empty($username))  {
         echo "bitte alles ausfülen.";
         exit;
     }
 
-        
     //LOGIN
     // genau wie bei register, aber jetzt nehmen wir wo username = ?, also existiert. wenn row 1 also user existiert, dan login erfolgreich, wenn row 0 also in datenbank es keinen user gibt mit ?, dann fail login. ? ist tja nur platzhalter für echte username bzw. password-
     // basically wir gucken gibt es den user in der datenbank? 
@@ -48,16 +43,14 @@
     $stmt->execute();
     // get_result() gives you many rows (even if it’s just 1)
     $result = $stmt->get_result();
-
     if (mysqli_num_rows($result) == 1) {
         // fetch_assoc() lets you access that row as an array, also gibt mir die user daten als array (username, pw aus datenbank).
         $user = $result->fetch_assoc();
-
         if (password_verify($password, $user['password'])) {
             $_SESSION['username'] = $user['username'];
+            $_SESSION['id'] = $user['id'];
             header('location: dashboard.php');
             exit;
-
         }
         else { echo "ungültiges passwort";
         }
