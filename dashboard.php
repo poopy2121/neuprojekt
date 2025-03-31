@@ -42,24 +42,11 @@ if ($_SESSION['username']) {
     $stmt->execute();
     $newResult = $stmt->get_result();
 
-    //notes displayen
-    $showQuerry = 'SELECT * from notes WHERE created_by = ?';
-    $stmt = $conn->prepare($showQuerry);
-    $stmt->bind_param('i',$userid);
-    $stmt->execute();
-    $result = $stmt->get_result();
-
-    //hieran arbeiten
-    while ($row = $result->fetch_assoc()) {        
-    echo '<p>' . $row['content'] . $row['created_at'] .'<p>';
-    }
-
+   
     //notes entfernen (hieran arbeiten, es soll nur eine deleted werden. )
     //außerdem musss ich machen dasss bei add jeder note gestyled wird und ein delte butto generiert wird, aber easy
     
-    if (isset($_POST['deleteNote'])) {
-        $deleteQuery = 'DELETE from notes WHERE created_by = ? and id = ?';
-    }
+   
 }}
 //effizientr möglich?
 else {
@@ -76,4 +63,38 @@ if (isset($_POST['logout'])) {
     exit;
 }
 //note logik 
+
+
+
+ //notes displayen
+    $showQuerry = 'SELECT * from notes WHERE created_by = ?';
+    $stmt = $conn->prepare($showQuerry);
+    $stmt->bind_param('i',$userid);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+
+ if (isset($_POST['deleteNote'])) {
+
+    // note id ist unten bei while in form post
+        $note_id = $_POST['note_id'];
+        $deleteQuery = 'DELETE from notes WHERE created_by = ? and id = ?';
+        $stmt = $conn->prepare($deleteQuery);
+        $stmt->bind_param('ii', $userid, $note_id);
+        $stmt->execute();
+    
+    }
+
+
+    //hieran arbeiten
+    while ($row = $result->fetch_assoc()) {
+        echo '<p>' . $row['content'] . '</p>';
+        echo '<form action="dashboard.php" method="post">';
+        echo '<input type="hidden" name="note_id" value="' . $row['id'] . '">';
+        echo '<input type="submit" name="deleteNote" value="Delete">';
+        echo '</form>';
+}
+
+
 ?>
+
