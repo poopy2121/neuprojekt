@@ -10,17 +10,13 @@
 <form action="dashboard.php" method="post">
     <input type="submit" name="logout" value="log out">
 </form>
-
-
     <form action="dashboard.php" method="post">
         <input type="text" name="note">
         <input type="submit" value="add note" name="addNote">
         <input type="submit" value="delete note" name="deleteNote">
-    </form>
-    
+    </form>    
 </body>
 </html>
-
 
 <?php 
 session_start();
@@ -33,6 +29,11 @@ if ($_SESSION['username']) {
     if (isset($_POST['addNote'])) {
     $note = htmlspecialchars($_POST['note']);
     echo $note;
+
+    if (empty($note)) {
+        echo "bitte gib was valides ein";
+        exit;
+    }
 
     // notitz in datenbank ballern
     $newQuery = "INSERT into notes (content, created_by) Values (?,?)";
@@ -48,28 +49,18 @@ if ($_SESSION['username']) {
     $stmt->execute();
     $result = $stmt->get_result();
 
-
     //hieran arbeiten
-    while ($row = $result->fetch_assoc()) {
-        
-    echo '<p>' . $row['content'] . '<p>';
+    while ($row = $result->fetch_assoc()) {        
+    echo '<p>' . $row['content'] . $row['created_at'] .'<p>';
     }
-    
 
     //notes entfernen (hieran arbeiten, es soll nur eine deleted werden. )
     //außerdem musss ich machen dasss bei add jeder note gestyled wird und ein delte butto generiert wird, aber easy
     
     if (isset($_POST['deleteNote'])) {
-        $deleteQuery = 'DELETE from notes WHERE created_by = ?';
-
-
+        $deleteQuery = 'DELETE from notes WHERE created_by = ? and id = ?';
     }
-}
-
-
-
-}
-
+}}
 //effizientr möglich?
 else {
     echo "PLEASE login.";
@@ -84,9 +75,5 @@ if (isset($_POST['logout'])) {
     session_destroy();
     exit;
 }
-
-
 //note logik 
-
-
 ?>
