@@ -13,7 +13,6 @@
     <form action="dashboard.php" method="post">
         <input type="text" name="note">
         <input type="submit" value="add note" name="addNote">
-        <input type="submit" value="delete note" name="deleteNote">
     </form>    
 </body>
 </html>
@@ -22,38 +21,36 @@
 session_start();
 require_once 'db.php';
 
+
+
 if ($_SESSION['username']) {
     $userid = $_SESSION['id'];
-    echo 'Wilkommen ' . $_SESSION['username'];
+    echo 'Wilkommen, ' .  $_SESSION['username'];
 
     if (isset($_POST['addNote'])) {
     $note = htmlspecialchars($_POST['note']);
-    echo $note;
+
+    $errormesage = "pls enter a valid note";
 
     if (empty($note)) {
-        echo "bitte gib was valides ein";
-        exit;
+        echo $errormesage;
     }
-
+    
+    else {
     // notitz in datenbank ballern
     $newQuery = "INSERT into notes (content, created_by) Values (?,?)";
     $stmt = $conn->prepare($newQuery);
     $stmt->bind_param('si', $note, $userid);
     $stmt->execute();
-    $newResult = $stmt->get_result();
+    $newResult = $stmt->get_result();   
+    }
 
-   
-    //notes entfernen (hieran arbeiten, es soll nur eine deleted werden. )
-    //außerdem musss ich machen dasss bei add jeder note gestyled wird und ein delte butto generiert wird, aber easy
-    
-   
 }}
-//effizientr möglich?
 else {
     echo "PLEASE login.";
     if (isset($_POST['logout'])) {
         header('Location: index.php');
-    exit;   
+        exit;
     }
 }
 
@@ -64,17 +61,7 @@ if (isset($_POST['logout'])) {
 }
 //note logik 
 
-
-
- //notes displayen
-    $showQuerry = 'SELECT * from notes WHERE created_by = ?';
-    $stmt = $conn->prepare($showQuerry);
-    $stmt->bind_param('i',$userid);
-    $stmt->execute();
-    $result = $stmt->get_result();
-
-
- if (isset($_POST['deleteNote'])) {
+if (isset($_POST['deleteNote'])) {
 
     // note id ist unten bei while in form post
         $note_id = $_POST['note_id'];
@@ -85,6 +72,12 @@ if (isset($_POST['logout'])) {
     
     }
 
+     //notes displayen
+    $showQuerry = 'SELECT * from notes WHERE created_by = ?';
+    $stmt = $conn->prepare($showQuerry);
+    $stmt->bind_param('i',$userid);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
     //hieran arbeiten
     while ($row = $result->fetch_assoc()) {
@@ -94,7 +87,5 @@ if (isset($_POST['logout'])) {
         echo '<input type="submit" name="deleteNote" value="Delete">';
         echo '</form>';
 }
-
-
 ?>
 
